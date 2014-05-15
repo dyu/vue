@@ -19,13 +19,12 @@ module.exports = {
             }
             return
         }
-
         this.xpartial = xpartial
     },
     update: function(value) {
         if(!this.initial_update) {
+            if(value == null || (value instanceof Array && value.length && !value[0])) return
             this.initial_update = true
-            if(!value || (value.length && !value[value.length-1])) return
         }
         
         if(this.cloned_partial) return

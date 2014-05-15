@@ -583,7 +583,7 @@ CompilerProto.compileTextNode = function (node) {
 
     var tokens = TextParser.parse(node.nodeValue)
     if (!tokens) return
-    var el, token, directive
+    var el, token, directive, trimmed, space
 
     for (var i = 0, l = tokens.length; i < l; i++) {
 
@@ -593,7 +593,13 @@ CompilerProto.compileTextNode = function (node) {
         if (token.key) { // a binding
             if (token.key.charAt(0) === '>') { // a partial
                 el = document.createComment('ref')
-                directive = this.parseDirective('partial', token.key.slice(1), el)
+                trimmed = token.key.slice(1).trim();
+                if((space=trimmed.indexOf(' ')) === -1) {
+                    directive = this.parseDirective('partial', trimmed, el)
+                } else {
+                    directive = this.parseDirective('xpartial', trimmed.substring(space + 1), el)
+                    directive.xpid = trimmed.substring(0, space)
+                }
             } else {
                 if (!token.html) { // text binding
                     el = document.createTextNode('')

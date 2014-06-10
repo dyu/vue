@@ -23,7 +23,7 @@ module.exports = {
     },
     update: function(value) {
         if(!this.initial_update) {
-            if(value == null || (Array.isArray(value) && value.length && !value[0])) return
+            if (value == null || (value.hasOwnProperty('$initvar') && !value.$initvar)) return
             this.initial_update = true
         }
         

@@ -470,6 +470,29 @@ describe('API', function () {
                     assert.strictEqual(t.d, methods.d)
                 })
 
+                it('should be bindable like normal properties', function (done) {
+                    var Test = Vue.extend({
+                        template: '{{ go(msg) }}',
+                        data: {
+                            msg: 'ok'
+                        },
+                        methods: {
+                            go: function (v) {
+                                return v + ' before'
+                            }
+                        }
+                    })
+                    var vm = new Test()
+                    assert.equal(vm.$el.textContent, 'ok before')
+                    vm.go = function (v) {
+                        return v + ' after'
+                    }
+                    nextTick(function () {
+                        assert.equal(vm.$el.textContent, 'ok after')
+                        done()
+                    })
+                })
+
             })
 
             describe('data', function () {
@@ -680,7 +703,7 @@ describe('API', function () {
                     assert.strictEqual(v.$data.c, null)
                 })
 
-                it('should be able in bind data from parents', function (done) {
+                it('should be able to bind data from parents', function (done) {
                     var v = new Vue({
                         template: '<div v-component="test" v-ref="child"></div>',
                         data: {
@@ -688,6 +711,7 @@ describe('API', function () {
                         },
                         components: {
                             test: {
+                                replace: true,
                                 paramAttributes: ['size'],
                                 template: '<div class="child" size="{{size}}"></div>'
                             }

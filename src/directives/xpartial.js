@@ -31,7 +31,7 @@ module.exports = {
         
         var el       = this.el,
             compiler = this.compiler,
-            partial  = this.cloned_partial = this.xpartial.call(this, value)
+            partial  = this.cloned_partial = utils.toFragment(this.xpartial.call(this, value))
         
         // comment ref node means inline partial
         if (el.nodeType === 8) {

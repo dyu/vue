@@ -1,0 +1,3 @@
+git fetch upstream
+git checkout xdev (if you're not on this branch already)
+git merge upstream/master

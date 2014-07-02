@@ -32,6 +32,7 @@
         "src/directives/html.js",
         "src/directives/style.js",
         "src/directives/partial.js",
+        "src/directives/xpartial.js",
         "src/directives/view.js"
     ]
 }

@@ -48,10 +48,25 @@ module.exports = {
 
         } else {
 
+            var outlet = partial.querySelector('content'),
+                // keep a ref to the el's content nodes
+                nodes = outlet ? [].slice.call(el.childNodes) : null
+            
             // just set innerHTML...
             el.innerHTML = ''
             el.appendChild(partial)
-
+            
+            if (nodes && nodes.length) {
+                // insert original content into the partial's <content/> tag
+                var parent = outlet.parentNode,
+                    i = 0, len = nodes.length
+                
+                while (i < len) {
+                    parent.insertBefore(nodes[i++], outlet)
+                }
+                
+                parent.removeChild(outlet)
+            }
         }
     }
 }

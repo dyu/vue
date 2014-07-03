@@ -226,7 +226,7 @@ var utils = module.exports = {
         }
         if (partials) {
             for (key in partials) {
-                partials[key] = utils.toFragment(partials[key])
+                partials[key] = { fragment: null, template: partials[key] }
             }
         }
         if (filters) {

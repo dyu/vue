@@ -28,12 +28,12 @@ assetTypes.forEach(function (type) {
             hash = this.options[type + 's'] = makeHash()
         }
         if (!value) return hash[id]
-        if (type === 'partial') {
-            value = { fragment: null, template: value }
-        } else if (type === 'component') {
+        if (type === 'component') {
             value = utils.toConstructor(value)
         } else if (type === 'filter') {
             utils.checkFilter(value)
+        } else if (type === 'partial' && typeof value === 'string') {
+            value = { template: value }
         }
         hash[id] = value
         return this

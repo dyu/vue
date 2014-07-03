@@ -218,7 +218,7 @@ var utils = module.exports = {
             partials   = options.partials,
             template   = options.template,
             filters    = options.filters,
-            key
+            key, value
         if (components) {
             for (key in components) {
                 components[key] = utils.toConstructor(components[key])
@@ -226,7 +226,8 @@ var utils = module.exports = {
         }
         if (partials) {
             for (key in partials) {
-                partials[key] = { fragment: null, template: partials[key] }
+                value = partials[key]
+                partials[key] = typeof value !== 'string' ? value : { template: value }
             }
         }
         if (filters) {

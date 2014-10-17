@@ -37,12 +37,12 @@ module.exports = {
     }
   },
   update: function(value) {
+    if (!this.dynamic_partial || this.cloned_partial) return
+    
     if (!this.initial_update) {
         if (!value || (value.hasOwnProperty('$initvar') && !value.$initvar)) return
         this.initial_update = true
     }
-    
-    if (this.cloned_partial) return
     
     var el      = this.el,
         vm      = this.vm,

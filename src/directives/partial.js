@@ -16,8 +16,9 @@ module.exports = {
     }
     if (this.arg) {
       // a dynamic partial
-      if (typeof partial === 'string') {
-        _.warn('The dynamic partial: ' + id + ' must provide an object.  E.g. { main: function(param){ return "template" } }')
+      if (typeof partial === 'string' || typeof partial.main !== 'function') {
+        _.warn('The dynamic partial: ' + id + 
+            ' must provide an object with a main function.  E.g. { main: function(param){ return "<div>hello</div>" } }')
       } else {
         this.dynamic_partial = partial
       }
@@ -41,8 +42,8 @@ module.exports = {
     if (!this.dynamic_partial || this.cloned_partial) return
     
     if (!this.initial_update) {
-        if (!value || (value.hasOwnProperty('$initvar') && !value.$initvar)) return
-        this.initial_update = true
+      if (!value || (value.hasOwnProperty('$initvar') && !value.$initvar)) return
+      this.initial_update = true
     }
     
     var el      = this.el,
@@ -50,18 +51,19 @@ module.exports = {
         partial
     
     if (el.nodeType === 8) {
-      partial = templateParser.parse(this.dynamic_partial.main.call(this, value), true)
       // comment ref node means inline partial
+      partial = templateParser.parse(this.dynamic_partial.main.call(this, value), true)
       compile(partial, vm.$options)(vm, partial)
       _.replace(el, partial)
     } else if (el.children && el.children.length) {
+      // transclude
       partial = transclude(el, { template: this.dynamic_partial.main.call(this, value) })
       compile(el, vm.$options, true)(vm, el)
       //compile(partial, vm.$options)(vm, partial)
       // _.replace(el, partial)
     } else {
-      partial = templateParser.parse(this.dynamic_partial.main.call(this, value), true)
       // just set innerHTML...
+      partial = templateParser.parse(this.dynamic_partial.main.call(this, value), true)
       el.innerHTML = ''
       el.appendChild(partial)
       compile(el, vm.$options, true)(vm, el)

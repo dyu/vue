@@ -251,6 +251,12 @@ function makeChildLinkFn (linkFns) {
     var node, nodeLinkFn, childrenLinkFn
     for (var i = 0, n = 0, l = linkFns.length; i < l; n++) {
       node = nodes[n]
+      if (!node) {
+        //console.log(n + ' < ' + l)
+        //for (var j = 0; j < n; j++)
+        //  console.log(nodes[j])
+        break
+      }
       nodeLinkFn = linkFns[i++]
       childrenLinkFn = linkFns[i++]
       if (nodeLinkFn) {

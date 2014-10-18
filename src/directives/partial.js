@@ -1,5 +1,6 @@
 var _ = require('../util')
 var compile = require('../compile/compile')
+var transclude = require('../compile/transclude')
 var templateParser = require('../parse/template')
 
 module.exports = {
@@ -46,33 +47,26 @@ module.exports = {
     
     var el      = this.el,
         vm      = this.vm,
-        partial = this.cloned_partial = templateParser.parse(this.dynamic_partial.main.call(this, value), true)
+        partial
     
     if (el.nodeType === 8) {
+      partial = templateParser.parse(this.dynamic_partial.main.call(this, value), true)
       // comment ref node means inline partial
       compile(partial, vm.$options)(vm, partial)
       _.replace(el, partial)
+    } else if (el.children && el.children.length) {
+      partial = transclude(el, { template: this.dynamic_partial.main.call(this, value) })
+      compile(el, vm.$options, true)(vm, el)
+      //compile(partial, vm.$options)(vm, partial)
+      // _.replace(el, partial)
     } else {
-      var outlet = partial.querySelector('content'),
-          // keep a ref to the el's content nodes
-          nodes = outlet ? [].slice.call(el.childNodes) : null
-    
+      partial = templateParser.parse(this.dynamic_partial.main.call(this, value), true)
       // just set innerHTML...
       el.innerHTML = ''
       el.appendChild(partial)
       compile(el, vm.$options, true)(vm, el)
-    
-      if (nodes && nodes.length) {
-        // insert original content into the partial's <content/> tag
-        var parent = outlet.parentNode,
-            i = 0, len = nodes.length
-        
-        while (i < len) {
-          parent.insertBefore(nodes[i++], outlet)
-        }
-        
-        parent.removeChild(outlet)
-      }
     }
+    
+    this.cloned_partial = partial
   }
 }

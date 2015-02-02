@@ -36,7 +36,7 @@ filters.lowercase = function (value) {
  */
 filters.currency = function (value, sign) {
     if (!value && value !== 0) return ''
-    sign = sign || '$'
+    sign = sign || ''
     var s = Math.floor(value).toString(),
         i = s.length % 3,
         h = i > 0 ? (s.slice(0, i) + (s.length > 3 ? ',' : '')) : '',

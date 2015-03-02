@@ -32,7 +32,7 @@ module.exports = {
     update: function (value) {
 
         if (!value) {
-            this.unbind()
+            if (this.arg !== 'once') this.unbind()
         } else if (!this.childVM) {
             this.childVM = new this.Ctor({
                 el: this.el.cloneNode(true),
